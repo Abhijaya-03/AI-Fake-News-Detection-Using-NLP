@@ -1,12 +1,21 @@
-from flask import Flask, render_template, request ,session
+from flask import Flask, render_template, request, session
 import joblib
 import re
+import os
+import nltk
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+nltk.data.path.insert(0, os.path.join(BASE_DIR, "..", "nltk_data"))
+
+nltk.download("stopwords", quiet=True)
+nltk.download("wordnet", quiet=True)
+nltk.download("omw-1.4", quiet=True)
 
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 app = Flask(__name__)
-app.secret_key = "fake_news_secret_key"
+app.secret_key = os.environ.get("SECRET_KEY", "fake_news_secret_key")
 
 # Load saved model and vectorizer
 model = joblib.load("../model/fake_news_model.pkl")
